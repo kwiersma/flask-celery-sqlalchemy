@@ -1,0 +1,25 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+
+[packages]
+flask = "*"
+celery = "*"
+sqlalchemy = "*"
+pymysql = "*"
+redis = "==2.10.6"
+
+Flask-Login = "==0.4.0"
+Flask-Migrate = "==2.0.2"
+Flask-Script = "==2.0.5"
+Flask-SQLAlchemy = "==2.1"
+Flask-WTF = "==0.14.2"
+Flask-User = {git = "https://github.com/lingthio/Flask-User.git", ref = "master"}
+pytest = "==3.0.5"
+pytest-cov = "==2.4.0"
+
+[requires]
+python_version = "3.6"
