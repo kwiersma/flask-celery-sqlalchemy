@@ -1,19 +1,17 @@
 # __init__.py is a special Python file that allows a directory to become
 # a Python package so it can be accessed using the 'import' statement.
 
-from datetime import datetime
-import os
-
 from flask import Flask
-from flask_script import Manager
-from flask_sqlalchemy import SQLAlchemy
 from flask_mail import Mail
-from flask_migrate import Migrate, MigrateCommand
+from flask_migrate import Migrate
+from flask_sqlalchemy import SQLAlchemy
 from flask_user import UserManager
 from flask_wtf.csrf import CSRFProtect
 
 
 # Instantiate Flask extensions
+from app import celeryapp
+
 csrf_protect = CSRFProtect()
 db = SQLAlchemy()
 mail = Mail()
@@ -45,6 +43,10 @@ def create_app(extra_config_settings={}):
 
     # Setup WTForms CSRFProtect
     csrf_protect.init_app(app)
+
+    # Celery
+    celery = celeryapp.create_celery_app(app)
+    celeryapp.celery = celery
 
     # Register blueprints
     from .views import register_blueprints

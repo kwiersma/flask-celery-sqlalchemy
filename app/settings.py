@@ -5,7 +5,7 @@
 import os
 
 # Application settings
-APP_NAME = "Flask-User starter app"
+APP_NAME = "Flask-Celery-SQLAlchemy"
 APP_SYSTEM_ERROR_SUBJECT_LINE = APP_NAME + " system error"
 
 # Flask settings
@@ -27,3 +27,11 @@ USER_ENABLE_USERNAME = False  # Register and Login with username
 USER_AFTER_LOGIN_ENDPOINT = 'main.member_page'
 USER_AFTER_LOGOUT_ENDPOINT = 'main.home_page'
 
+TESTING = False
+
+# Celery
+CELERY_REDIS_USE_SSL = False
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_REDIS_MAX_CONNECTIONS = 5

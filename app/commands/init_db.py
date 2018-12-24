@@ -1,8 +1,4 @@
 # This file defines command line commands for manage.py
-#
-# Copyright 2014 SolidBuilds.com. All rights reserved
-#
-# Authors: Ling Thio <ling.thio@gmail.com>
 
 import datetime
 
@@ -10,7 +6,9 @@ from flask import current_app
 from flask_script import Command
 
 from app import db
+from app.models.feedeater_models import Feed
 from app.models.user_models import User, Role
+
 
 class InitDbCommand(Command):
     """ Initialize the database."""
@@ -19,11 +17,25 @@ class InitDbCommand(Command):
         init_db()
         print('Database has been initialized.')
 
+
 def init_db():
     """ Initialize the database."""
     db.drop_all()
     db.create_all()
     create_users()
+    create_feeds()
+
+
+def create_feeds():
+    feed = Feed(
+        title='Real Python', status=1, url='https://realpython.com/atom.xml', type='ATOM',
+        created=datetime.datetime.utcnow(), updated=datetime.datetime.utcnow())
+    db.session.add(feed)
+    feed2 = Feed(
+        title='Planet Python', status=1, url='http://planetpython.org/rss20.xml', type='RSS',
+        created=datetime.datetime.utcnow(), updated=datetime.datetime.utcnow())
+    db.session.add(feed2)
+    db.session.commit()
 
 
 def create_users():
