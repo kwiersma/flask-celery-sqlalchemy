@@ -52,16 +52,18 @@ def create_celery_app(_app=None):
                     # Flask-SQLAlchemy doesn't appear to create a SQLA session that is thread safe for a
                     # Celery worker to use. To get around that we can just go ahead and create our own
                     # engine and session specific to this Celery task run.
+                    #
+                    # Connection Pools with multiprocessing:
+                    # https://docs.sqlalchemy.org/en/latest/core/pooling.html#using-connection-pools-with-multiprocessing
+                    #
                     # FMI: https://stackoverflow.com/a/51773204/920389
-                    # FMI: https://stackoverflow.com/q/34252892/920389
-                    db.session.remove()
-                    db.session.close_all()
-                    db.engine.dispose()
-
-                    engine = create_engine(_app.config['SQLALCHEMY_DATABASE_URI'], convert_unicode=True)
-                    db_sess = scoped_session(sessionmaker(autocommit=False, autoflush=True, bind=engine))
-                    # db.session = models.db.session = db_sess
-                    db.session = db_sess
+                    # db.session.remove()
+                    # db.session.close_all()
+                    # db.engine.dispose()
+                    #
+                    # engine = create_engine(_app.config['SQLALCHEMY_DATABASE_URI'], convert_unicode=True)
+                    # db_sess = scoped_session(sessionmaker(autocommit=False, autoflush=True, bind=engine))
+                    # db.session = db_sess
 
                     return TaskBase.__call__(self, *args, **kwargs)
             else:

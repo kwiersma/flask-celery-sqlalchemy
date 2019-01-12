@@ -1,4 +1,6 @@
-from flask import Blueprint, redirect, render_template, flash
+import datetime
+
+from flask import Blueprint, redirect, render_template, flash, jsonify
 from flask import request, url_for
 from flask_user import current_user, login_required, roles_required
 
@@ -60,3 +62,20 @@ def task():
 
     flash('Fetch articles task kicked off')
     return render_template('main/home_page.html')
+
+
+@main_blueprint.route('/new-task', methods=['GET', 'POST'])
+def new_task():
+    title = request.args.get('title')
+    url = request.args.get('url')
+
+    feed = Feed(
+        title=title, status=1, url=url, type='rss',
+        created=datetime.datetime.utcnow(), updated=datetime.datetime.utcnow())
+    db.session.add(feed)
+
+    db.session.commit()
+
+    tasks.fetch_articles.delay(feed.id)
+
+    return jsonify({'message': 'Feed created.', 'feed_id': feed.id})

@@ -95,7 +95,7 @@ class FeedEater:
         log = Log(articles=len(result.articles), new_articles=created_count)
         if result.exception:
             feed_result.had_exception = True
-            log.exception = result.exception
+            log.exception = str(result.exception)
             feed.status = models.Feed.INACTIVE  # Inactive
         feed_result.log = log.to_dict()
 
