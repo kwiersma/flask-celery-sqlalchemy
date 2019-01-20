@@ -8,7 +8,6 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_user import UserManager
 from flask_wtf.csrf import CSRFProtect
 
-
 # Instantiate Flask extensions
 from app import celeryapp
 
@@ -19,6 +18,15 @@ migrate = Migrate()
 
 
 # Initialize Flask Application
+def populate_cache(app):
+    from .models.feedeater_models import Feed
+
+    with app.app_context():
+        feeds = Feed.query.all()
+
+    return feeds
+
+
 def create_app(extra_config_settings={}):
     """Create a Flask application.
     """
@@ -73,6 +81,12 @@ def create_app(extra_config_settings={}):
     @app.context_processor
     def context_processor():
         return dict(user_manager=user_manager)
+
+    # Load some data into memory from the database
+    # If we do this here then we need to have the Celery tasks reset the SQLAlchemy session and
+    # engine before they run since the databases connection cannot be reused acrossed processes
+    # FMI: see the notes in celeryapp/__init__.py
+    feeds = populate_cache(app)
 
     return app
 
