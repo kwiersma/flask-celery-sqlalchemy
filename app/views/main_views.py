@@ -1,16 +1,15 @@
-# Copyright 2014 SolidBuilds.com. All rights reserved
-#
-# Authors: Ling Thio <ling.thio@gmail.com>
+import datetime
 
-
-from flask import Blueprint, redirect, render_template
+from flask import Blueprint, redirect, render_template, flash, jsonify
 from flask import request, url_for
 from flask_user import current_user, login_required, roles_required
 
-from app import db
+from app import db, tasks
+from app.models.feedeater_models import Feed
 from app.models.user_models import UserProfileForm
 
 main_blueprint = Blueprint('main', __name__, template_folder='templates')
+
 
 # The Home page is accessible to anyone
 @main_blueprint.route('/')
@@ -54,3 +53,29 @@ def user_profile_page():
                            form=form)
 
 
+@main_blueprint.route('/task')
+def task():
+    feeds = Feed.query.filter_by(status=1)
+
+    for feed in feeds:
+        tasks.fetch_articles.delay(feed.id)
+
+    flash('Fetch articles task kicked off')
+    return render_template('main/home_page.html')
+
+
+@main_blueprint.route('/new-task', methods=['GET', 'POST'])
+def new_task():
+    title = request.args.get('title')
+    url = request.args.get('url')
+
+    feed = Feed(
+        title=title, status=1, url=url, type='rss',
+        created=datetime.datetime.utcnow(), updated=datetime.datetime.utcnow())
+    db.session.add(feed)
+
+    db.session.commit()
+
+    tasks.fetch_articles.delay(feed.id)
+
+    return jsonify({'message': 'Feed created.', 'feed_id': feed.id})
