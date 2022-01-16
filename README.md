@@ -1,13 +1,13 @@
 # Flask + Celery + SQLAlchemy Example App
 
 This example app demonstrates how to write Celery tasks that work with Flask and
-SQLAlchemy. I had a hard time finding a complet example that worked correctly.
+SQLAlchemy. I had a hard time finding a complete example that worked correctly.
 
 Based on the [the Flask-User-Starter-App](https://github.com/lingthio/Flask-User-starter-app).
 
 ## Code characteristics
 
-* Tested on Python 3.6
+* Tested on Python 3.9
 * Well organized directories with lots of comments
     * app
         * commands
@@ -36,7 +36,7 @@ We assume that you have `git` and `virtualenv` and `virtualenvwrapper` installed
     # Install required Python packages
     cd ~/dev/my_app
     workon my_app
-    pip install -r requirements.txt
+    pipenv install
 
 
 # Configuring SMTP
