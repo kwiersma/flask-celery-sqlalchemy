@@ -22,7 +22,7 @@ pytest = "==3.0.5"
 pytest-cov = "==2.4.0"
 attrs = "==19.1.0"
 feedparser = "==6.0.8"
-requests = "==2.31.0"
+requests = "==2.32.2"
 
 [requires]
 python_version = "3.9"
