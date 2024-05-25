@@ -9,7 +9,7 @@ verify_ssl = true
 flask = "==1.1.1"
 celery = "==5.2.3"
 sqlalchemy = "==1.3.8"
-pymysql = "==1.0.2"
+pymysql = "==1.1.1"
 redis = "==4.5.4"
 Flask-Login = "==0.4.0"
 Flask-Migrate = "==2.0.2"
